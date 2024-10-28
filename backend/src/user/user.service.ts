@@ -8,7 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { ProfileService } from 'src/profile/profile.service';
 import { Role } from 'src/auth/roles.enum';
-
+import { Query } from 'mongoose';
 
 @Injectable()
 export class UserService {
@@ -56,7 +56,7 @@ export class UserService {
       } else {
         try {
           let newProfile = await this.profileService.createFirst(createUserDto.userName);
-          newUser.profileId = newProfile._id;
+          newUser.profileId = newProfile._id as any;
 
           savedUser = await this.hashAndSave(newUser);
         } catch (err) {
@@ -122,20 +122,18 @@ export class UserService {
     }
     return updatedUser;
   }
-
-  async remove(username: string) {
-    try {
-      const filter = {userName: username};
-      // console.log(username);
-      const user = await this.userModel.findOne(filter).exec();
-      if (user.profileId !== null) {
-        const profileId = user.profileId;
-        let deletedProfile = await this.profileService.removeProfile(profileId);
-      }        
-      return this.userModel.deleteOne({ userName: username }).exec();
-    } catch (error) {
-        throw error;
-    }
-
+async remove(username: string): Promise<Query<any, any>> {
+  try {
+    const filter = { userName: username };
+    // console.log(username);
+    const user = await this.userModel.findOne(filter).exec();
+    if (user.profileId !== null) {
+      const profileId = user.profileId;
+      let deletedProfile = await this.profileService.removeProfile(profileId);
+    }        
+    return this.userModel.deleteOne({ userName: username }).exec();
+  } catch (error) {
+    // handle error
   }
+}
 }

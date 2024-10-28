@@ -34,10 +34,9 @@ export class UserController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
-
-  @Delete(':username')
-  remove(@Param('username') username: string) {
-    console.log('deleted user');
-    return this.userService.remove(username);
-  }
+@Delete(':username')
+async remove(@Param('username') username: string): Promise<any> {
+  console.log('deleted user');
+  return this.userService.remove(username);
 }
+  }

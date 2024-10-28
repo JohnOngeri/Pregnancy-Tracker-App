@@ -90,7 +90,7 @@ export class CommentsService {
   async removeComment(id: string) {
     const filter = {_id: id};
     try{
-      const deletedComment = await this.commentModel.findByIdAndRemove(filter).exec();
+      const deletedComment = await this.commentModel.findByIdAndDelete(filter, { new: true });
 
       // update the post
       const reqPost = await this.postService.findOne(deletedComment.postId);
