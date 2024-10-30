@@ -12,7 +12,7 @@ import 'package:frontend/presentation/profile/components/textfield.dart';
 import 'package:frontend/presentation/profile/components/profileavatar.dart';
 import 'dart:convert';
 
-import '../../../infrastructure/profile/profile_form_dto.dart';
+
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -26,7 +26,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
-    final pickedImage = await picker.getImage(source: source);
+    final pickedImage = await picker.pickImage(source: source);
     if (pickedImage != null) {
       Future.microtask(() {
         setState(() {
