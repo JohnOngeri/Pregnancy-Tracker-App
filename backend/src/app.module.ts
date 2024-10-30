@@ -15,7 +15,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ProfileModule, 
-    MongooseModule.forRoot('mongodb+srv://jouma:Malindi001@cluster0.mim4b.mongodb.net/Pregnancy'), 
+    MongooseModule.forRoot('mongodb://localhost:27017/Pregnancy'), 
     ConfigModule.forRoot({
       isGlobal: true,
     }),
