@@ -1,12 +1,15 @@
 import { IsNotEmpty } from "class-validator";
-import { Types } from "mongoose"
+import { Types } from "mongoose";
 
 export class CreateNoteDto {
     @IsNotEmpty()
-    title:string;
+    id: Types.ObjectId;
 
     @IsNotEmpty()
-    body:string;
+    title: string;
+
+    @IsNotEmpty()
+    body: string;
 
     @IsNotEmpty()
     author: string;

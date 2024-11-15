@@ -10,7 +10,7 @@ import '../../../../local_data/shared_preferences/jj_shared_preferences_service.
 import '../../../core/constants/assets.dart';
 
 class NoteBody extends StatefulWidget {
-  const NoteBody({Key? key});
+  const NoteBody({Key? key}) : super(key: key);
 
   @override
   _NoteBodyState createState() => _NoteBodyState();
@@ -19,7 +19,7 @@ class NoteBody extends StatefulWidget {
 class _NoteBodyState extends State<NoteBody> {
   @override
   Widget build(BuildContext context) {
-    print("Note body build called");
+    print("NoteBody build called");
     Size size = MediaQuery.of(context).size;
     return SizedBox(
       height: size.height,
@@ -34,10 +34,9 @@ class _NoteBodyState extends State<NoteBody> {
               scale: 5,
             ),
           ),
-          // plus button
-          Body(),
+          // Plus button and background
+          const Body(),
           const PlusButton(),
-          // background
         ],
       ),
     );
@@ -59,13 +58,23 @@ class _BodyState extends State<Body> {
   @override
   void initState() {
     super.initState();
+    print("Initializing BodyState");
     noteBloc = BlocProvider.of<NoteBloc>(context);
-    service.getProfileId().then((value) => fetchNotes(value!));
-    // fetchNotes('6474824cebecd37a7abd4cb3');
+
+    service.getProfileId().then((value) {
+      if (value != null) {
+        print("Fetched profile ID: $value");
+        fetchNotes(value);
+      } else {
+        print("Error: Profile ID is null");
+      }
+    }).catchError((error) {
+      print("Error fetching profile ID: $error");
+    });
   }
 
   Future<void> fetchNotes(String userId) async {
-    print("fetching notes");
+    print("Dispatching NoteEventGetByUser for user ID: $userId");
     noteBloc.add(NoteEventGetByUser(userId));
   }
 
@@ -73,26 +82,31 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     return BlocConsumer<NoteBloc, NoteState>(
       listener: (context, state) {
-        if (state is NoteStateSuccess || state is NoteStateDeleted) {
-          service.getProfileId().then((value) => fetchNotes(value!));
-          // noteBloc.add(NoteEventGetByUser('6474824cebecd37a7abd4cb3'));
+        if (state is NoteStateFailure) {
+          print("NoteStateFailure: Failed to fetch notes");
         }
       },
       bloc: noteBloc,
       builder: (context, state) {
+        print("Current state: $state");
+
         if (state is NoteStateLoading) {
-          return Center(
+          print("Loading notes...");
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (state is NoteStateSuccessMultiple) {
+          print("Notes fetched successfully: ${state.notes.length} notes");
           notes = state.notes.reversed.toList();
           return ListView.builder(
             itemCount: notes.length,
             itemBuilder: (context, index) {
               final note = notes[index];
-              // Build your note item widget here
-              var item =
-                  NoteItem(title: note.title, body: note.body, NoteId: note.id);
+              var item = NoteItem(
+                title: note.title,
+                body: note.body,
+                NoteId: note.id,
+              );
               return Padding(
                 padding: const EdgeInsets.only(bottom: 5),
                 child: item,
@@ -101,10 +115,10 @@ class _BodyState extends State<Body> {
           );
         } else if (state is NoteStateFailure) {
           return Center(
-            child: Text("Failed to fetch notes"),
+            child: Text("Failed to fetch notes:}"),
           );
         } else {
-          return Center(
+          return const Center(
             child: Text("No notes found"),
           );
         }
@@ -114,7 +128,7 @@ class _BodyState extends State<Body> {
 }
 
 class PlusButton extends StatelessWidget {
-  const PlusButton({Key? key});
+  const PlusButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +136,6 @@ class PlusButton extends StatelessWidget {
       right: 10,
       bottom: 10,
       child: InkWell(
-        // borderRadius: BorderRadius.circular(100),
         onTap: () {
           Navigator.push(
               context,
@@ -130,17 +143,19 @@ class PlusButton extends StatelessWidget {
                 builder: (context) => const AddNotePage(),
               ));
         },
-        child: Stack(children: [
-          Image.asset(
-            Assets.assetsImagesEllipse8,
-            scale: 3.8,
-          ),
-          const Positioned(
-              // increase the size of the icon
+        child: Stack(
+          children: [
+            Image.asset(
+              Assets.assetsImagesEllipse8,
+              scale: 3.8,
+            ),
+            const Positioned(
               top: 20,
               left: 20,
-              child: Center(child: Icon(size: 40, Icons.edit)))
-        ]),
+              child: Center(child: Icon(size: 40, Icons.edit)),
+            ),
+          ],
+        ),
       ),
     );
   }

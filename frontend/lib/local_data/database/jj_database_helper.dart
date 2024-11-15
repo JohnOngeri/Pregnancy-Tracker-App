@@ -32,31 +32,58 @@ import 'package:frontend/infrastructure/tip/tip_mapper.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart'
+ show databaseFactory, databaseFactoryFfi;
+ import 'package:flutter/foundation.dart'; // for kIsWeb
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart'; // for web factory
 
 class DatabaseHelper {
-  DatabaseHelper._privateConstructor();
-
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
-
+  static final DatabaseHelper _instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
-  Future<Database> get database async => _database ??= await _initDatabase();
+  // Initialization
+  DatabaseHelper._privateConstructor();
+  static DatabaseHelper get instance => _instance;
 
-  Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'joyfuljourney.db');
-    return await openDatabase(path, version: 3, onCreate: _onCreate);
+  Future<Database> get database async {
+    return _database ??= await _initDatabase();
   }
 
-  Future _onCreate(Database db, int version) async {
+  // Initialize database
+  // Initialize database
+ Future<Database> _initDatabase() async {
+  if (kIsWeb) {
+    // For web: Use sqflite_common_ffi_web
+    databaseFactory = databaseFactoryFfiWeb;
+    String path = 'my_web_web.db'; // Provide a web-friendly database name
+    return await openDatabase(
+      path,
+      version: 3,
+      onCreate: _onCreate,
+    );
+  } else {
+    // For non-web: Use default factory
+    databaseFactory = databaseFactoryFfi;
+    String path = join(await getDatabasesPath(), 'Pregnancy Tracker.db');
+    return await openDatabase(
+      path,
+      version: 3,
+      onCreate: _onCreate,
+    );
+  }
+}
+
+  // On database creation
+  Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE appointment (
-          id TEXT PRIMARY KEY,
-          title TEXT NOT NULL,
-          body TEXT NOT NULL,
-          date TEXT NOT NULL,
-          time TEXT NOT NULL,
-          author TEXT NOT NULL
-        )
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        body TEXT NOT NULL,
+        date TEXT NOT NULL,
+        time TEXT NOT NULL,
+        author TEXT NOT NULL
+      )
     ''');
 
     await db.execute('''
@@ -100,8 +127,8 @@ class DatabaseHelper {
         posts TEXT NOT NULL,
         comments TEXT NOT NULL,
         socialMedia TEXT NOT NULL
-        )
-      ''');
+      )
+    ''');
 
     await db.execute('''
       CREATE TABLE tip (
@@ -109,8 +136,8 @@ class DatabaseHelper {
         body TEXT NOT NULL,
         title TEXT NOT NULL,
         type TEXT NOT NULL
-        )
-      ''');
+      )
+    ''');
   }
 
   // get all requests

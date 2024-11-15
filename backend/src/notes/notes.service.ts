@@ -8,66 +8,40 @@ import { Model } from 'mongoose';
 @Injectable()
 export class NotesService {
   constructor(
-    @InjectModel(Note.name) private NoteModel: Model<INote>
-  ) { }
+    @InjectModel(Note.name) private readonly noteModel: Model<INote>
+  ) {}
 
   async findAll(): Promise<Note[]> {
-    return this.NoteModel.find().exec();
+    return this.noteModel.find().exec();
   }
 
   async create(newNote: CreateNoteDto): Promise<Note> {
-    try {
-      const createdNote = new this.NoteModel(newNote);
-
-      const validation = createdNote.validateSync();
-      if (validation) {
-        console.log(validation, 'validation');
-        throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-      }
-      
-      console.log(createdNote, 'createdNote');
-      
-      return await createdNote.save()
-    } catch (error) {
+    const createdNote = new this.noteModel(newNote);
+    const validation = createdNote.validateSync();
+    if (validation) {
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
+    return await createdNote.save();
   }
 
   async findOne(id: string): Promise<Note> {
-    try {
-      const note = await this.NoteModel.findById(id).exec();
-      return note;
-    } catch (error) {
+    const note = await this.noteModel.findById(id).exec();
+    if (!note) {
       throw new NotFoundException('Note Not Found');
     }
-
+    return note;
   }
 
   async findByUser(author: string) {
-    try{
-      const finder = {author: author};
-      
-      return await this.NoteModel.find(finder).exec();
-    } catch (error) {
-      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-    }
+    const finder = { author: author };
+    return await this.noteModel.find(finder).exec();
   }
 
   async updateNote(id: string, updateCreateNoteDto: CreateNoteDto): Promise<Note> {
-    try {
-
-      return await this.NoteModel.findByIdAndUpdate(id, updateCreateNoteDto, { new: true }).exec();
-    } catch (error) {
-      throw new Error(`{error.message}`);
-
-    }
+    return await this.noteModel.findByIdAndUpdate(id, updateCreateNoteDto, { new: true }).exec();
   }
 
   async removeNote(id: string): Promise<any> {
-    try {
-      return await this.NoteModel.deleteOne({ _id: id }).exec();
-    } catch (error) {
-      throw new Error(`{error.message}`);
-    }
+    return await this.noteModel.deleteOne({ _id: id }).exec();
   }
 }

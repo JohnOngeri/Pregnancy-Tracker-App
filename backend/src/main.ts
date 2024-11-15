@@ -6,7 +6,7 @@ import * as express from 'express';
 const corsOptions = {
   origin: '*', // Allow requests from all origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Content-Type, Accept',
+ allowedHeaders: 'Content-Type, Authorization, Accept, Accept-Language, Accept-Encoding'// Allow all headers
 };
 
 async function bootstrap() {

@@ -63,3 +63,18 @@ class CustomError extends TipFailure {
   final String message;
   const CustomError(this.message) : super._();
 }
+
+void main() {
+  try {
+    // code that might throw an error
+    // ...
+  } on TipFailure catch (e) {
+    if (e is CustomError) {
+      print('Custom error occurred: ${e.message}');
+    } else {
+      print('An error occurred: ${e.runtimeType}');
+    }
+  } catch (e) {
+    print('An unknown error occurred: $e');
+  }
+}
