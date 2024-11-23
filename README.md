@@ -48,6 +48,71 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 
+FRONTEND
 
+pp:
+
+markdown
+CopyInsert
+# Pregnancy Tracker App
+
+This is a Flutter application that allows users to track their pregnancy and stay informed about their baby's development.
+
+## Getting Started
+
+To get started with the application, follow these steps:
+
+### Step 1: Install Flutter
+
+If you haven't already, install Flutter on your machine by following the instructions on the [Flutter website](https://flutter.dev/docs/get-started/install).
+
+### Step 2: Clone the Repository
+
+ Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/your-username/pregnancy-tracker-app.git
+Step 3: Navigate to the Project Directory
+Navigate to the project directory:
+
+bash
+CopyInsert in Terminal
+cd pregnancy-tracker-app
+Step 4: Install Dependencies
+Install the dependencies:
+
+bash
+CopyInsert in Terminal
+flutter pub get
+Step 5: Set up the Environment Variables
+Set up the environment variables:
+
+bash
+CopyInsert in Terminal
+cp .env.example .env
+Step 6: Start the Application
+Start the application:
+
+bash
+CopyInsert in Terminal
+flutter run
+Step 7: Open the Application in Your Emulator or Simulator
+Open the application in your emulator or simulator:
+
+bash
+CopyInsert in Terminal
+http://localhost:5000
+Step 8: Set up the Database
+Set up the database by running the following command:
+
+bash
+CopyInsert in Terminal
+flutter pub run sqflite_common_ffi:sqflite_ffi_init
+Step 9: Run the Application
+Run the application:
+
+bash
+CopyInsert in Terminal
+flutter run
 
 
