@@ -50,10 +50,7 @@ $ npm run test:cov
 
 FRONTEND
 
-pp:
 
-markdown
-CopyInsert
 # Pregnancy Tracker App
 
 This is a Flutter application that allows users to track their pregnancy and stay informed about their baby's development.
@@ -76,43 +73,43 @@ Step 3: Navigate to the Project Directory
 Navigate to the project directory:
 
 bash
-CopyInsert in Terminal
+
 cd pregnancy-tracker-app
 Step 4: Install Dependencies
 Install the dependencies:
 
 bash
-CopyInsert in Terminal
+
 flutter pub get
 Step 5: Set up the Environment Variables
 Set up the environment variables:
 
 bash
-CopyInsert in Terminal
+
 cp .env.example .env
 Step 6: Start the Application
 Start the application:
 
 bash
-CopyInsert in Terminal
+
 flutter run
 Step 7: Open the Application in Your Emulator or Simulator
 Open the application in your emulator or simulator:
 
 bash
-CopyInsert in Terminal
+
 http://localhost:5000
 Step 8: Set up the Database
 Set up the database by running the following command:
 
 bash
-CopyInsert in Terminal
+
 flutter pub run sqflite_common_ffi:sqflite_ffi_init
 Step 9: Run the Application
 Run the application:
 
 bash
-CopyInsert in Terminal
+
 flutter run
 
 
